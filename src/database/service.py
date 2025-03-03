@@ -4,10 +4,10 @@ from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from src.database.config import settings
-from src.database.models.base import Base
-from src.database.models.city import City
-from src.database.models.weather_data import WeatherData
-from src.database.models.city_weather_data import CityWeatherData
+from src.database.base_model import Base
+from src.city.models import City
+from src.weather.models import WeatherData
+from src.city_weather_data.models import CityWeatherData
 
 # Создаем движок
 DB_URL = settings.db_url(driver="asyncpg")
