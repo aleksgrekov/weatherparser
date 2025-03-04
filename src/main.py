@@ -3,8 +3,8 @@ from contextlib import asynccontextmanager
 import uvicorn
 from fastapi import FastAPI
 
-from src.database.service import delete_tables, create_tables
-from src.city.routers import router as city_router
+from src.routers.city_router import router as city_router
+from src.database.service import create_tables, delete_tables
 
 
 @asynccontextmanager

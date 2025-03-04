@@ -3,11 +3,11 @@ from typing import Annotated, AsyncGenerator
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
-from src.database.config import settings
-from src.database.base_model import Base
+from src.models.base_model import Base
+from src.database.config import db_settings
 
 # Создаем движок
-DB_URL = settings.db_url(driver="asyncpg")
+DB_URL = db_settings.db_url(driver="asyncpg")
 engine = create_async_engine(DB_URL, echo=False)
 
 # Фабрика сессий

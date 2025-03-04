@@ -4,7 +4,7 @@ from typing import Optional
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class Settings(BaseSettings):
+class DBSettings(BaseSettings):
     MODE: str
 
     DB_HOST: str
@@ -24,8 +24,9 @@ class Settings(BaseSettings):
         )
 
     model_config = SettingsConfigDict(
-        env_file=Path(__file__).resolve().parent.parent.parent / ".env"
+        env_file=Path(__file__).resolve().parent.parent.parent / ".env",
+        extra="ignore",
     )
 
 
-settings: Settings = Settings()  # type: ignore
+db_settings: DBSettings = DBSettings()  # type: ignore

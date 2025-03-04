@@ -1,6 +1,18 @@
 from pydantic import BaseModel, Field
 
 
+class SuccessResponse(BaseModel):
+    """
+    Схема для успешного ответа. Используется для передачи подтверждения выполнения операции.
+    """
+
+    message: str = Field(
+        ...,
+        title="Сообщение об успехе",
+        description="Сообщение, подтверждающее успешное выполнение операции.",
+    )
+
+
 class ErrorResponseSchema(BaseModel):
     """
     Схема для ответа об ошибке. Используется для отправки информации о возникшей ошибке.

@@ -2,7 +2,7 @@ import sys
 from pathlib import Path
 
 # Путь для хранения логов
-log_folder_path = Path(__file__).parent.parent / "logs"
+log_folder_path = Path(__file__).parent.parent.parent / "logs"
 log_folder_path.mkdir(exist_ok=True)
 log_file_path = log_folder_path / "logfile.log"
 
@@ -31,7 +31,7 @@ dict_config = {
             "level": "ERROR",
             "formatter": "fileFormatter",
             "filename": str(log_file_path),
-            "maxBytes": 10**6,
+            "maxBytes": 10 ** 6,
             "backupCount": 5,
         },
     },

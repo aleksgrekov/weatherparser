@@ -2,8 +2,8 @@ from typing import Annotated
 
 from fastapi import APIRouter, Path
 
-from src.city.repositories import CityRepository
-from src.city.schemas import CitySchema
+from src.repositories.city_repository import CityRepository
+from src.schemas.city_schemas import CitySchema
 from src.database.service import DBSession
 
 router = APIRouter(

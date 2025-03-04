@@ -3,8 +3,8 @@ import traceback
 from fastapi import Request, status
 from fastapi.responses import JSONResponse
 
-from src.handlers.schemas import ErrorResponseSchema
-from src.logger import get_logger
+from src.schemas.base_schemas import ErrorResponseSchema
+from src.logger.logger import get_logger
 
 logger = get_logger(__name__)
 

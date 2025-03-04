@@ -1,7 +1,7 @@
 from sqlalchemy import ForeignKey, Integer, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.database.base_model import Base
+from src.models.base_model import Base
 
 
 class CityWeatherData(Base):
@@ -21,5 +21,5 @@ class CityWeatherData(Base):
         Integer, ForeignKey("weather_data.id", ondelete="CASCADE")
     )
 
-    city = relationship("City", back_populates="weatherdata")
+    city = relationship("City", back_populates="weather_data")
     weather = relationship("WeatherData", back_populates="cities")
