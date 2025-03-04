@@ -5,9 +5,6 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 
 from src.database.config import settings
 from src.database.base_model import Base
-from src.city.models import City
-from src.weather.models import WeatherData
-from src.city_weather_data.models import CityWeatherData
 
 # Создаем движок
 DB_URL = settings.db_url(driver="asyncpg")
