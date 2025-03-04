@@ -12,9 +12,13 @@ engine = create_async_engine(DB_URL, echo=False)
 
 # Фабрика сессий
 # async_session = async_sessionmaker(bind=engine, expire_on_commit=False)
-API_SessionFactory = async_sessionmaker(bind=engine, expire_on_commit=False, class_=AsyncSession)
+API_SessionFactory = async_sessionmaker(
+    bind=engine, expire_on_commit=False, class_=AsyncSession
+)
 
-Scheduler_SessionFactory = async_sessionmaker(bind=engine, expire_on_commit=False, class_=AsyncSession)
+Scheduler_SessionFactory = async_sessionmaker(
+    bind=engine, expire_on_commit=False, class_=AsyncSession
+)
 
 
 async def get_session() -> AsyncGenerator[AsyncSession, None]:

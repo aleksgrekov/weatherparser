@@ -7,11 +7,12 @@ from src.models.base_model import Base
 class City(Base):
     __tablename__ = "cities"
 
-    title: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
+    title: Mapped[str] = mapped_column(String(50), unique=True)
 
     weather_data = relationship(
         "CityWeatherData",
         foreign_keys="CityWeatherData.city_id",
         back_populates="city",
         cascade="all, delete-orphan",
+        passive_deletes=True,
     )

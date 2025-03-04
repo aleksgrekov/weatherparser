@@ -8,6 +8,7 @@ from src.handlers.custom_exceptions import (
     RowNotFoundException,
 )
 from src.models.city_model import City
+from src.repositories.city_weather_repository import CityWeatherRepository
 from src.schemas.base_schemas import SuccessResponse
 from src.schemas.city_schemas import CitySchema, ResponseCitySchema
 
@@ -32,6 +33,7 @@ class CityRepository:
         deleted_city = await cls._delete_city_by_id(session, city_id)
         if not deleted_city:
             raise RowNotFoundException()
+        await CityWeatherRepository.delete_weather_data(session, deleted_city)
 
         await cls._secure_commit(session)
         return SuccessResponse(message="Город успешно удален!")
@@ -51,13 +53,13 @@ class CityRepository:
         return await session.scalar(exists_query)
 
     @staticmethod
-    async def _delete_city_by_id(session: AsyncSession, city_id: int) -> bool:
+    async def _delete_city_by_id(session: AsyncSession, city_id: int) -> int | None:
         """
         Удаление города по ID с возвращением ID удаленной записи.
         """
         delete_query = delete(City).where(City.id == city_id).returning(City.id)
         result = await session.execute(delete_query)
-        return result.fetchone() is not None
+        return result.fetchone()[0]
 
     @staticmethod
     async def _secure_commit(session: AsyncSession) -> None:

@@ -1,9 +1,9 @@
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.interval import IntervalTrigger
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database.service import Scheduler_SessionFactory
 from src.repositories.weather_repository import WeatherRepository
-from sqlalchemy.ext.asyncio import AsyncSession
 
 
 async def add_weather_data_to_db(session: AsyncSession):
@@ -24,11 +24,11 @@ async def start_scheduler():
 
         scheduler.add_job(
             add_weather_data_to_db,
-            IntervalTrigger(seconds=15),
+            IntervalTrigger(seconds=5),
             args=[session],
             id="weather_data_task",
             name="Добавление данных о погоде",
-            replace_existing=True
+            replace_existing=True,
         )
 
         scheduler.start()

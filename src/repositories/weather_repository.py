@@ -1,5 +1,5 @@
 import asyncio
-from typing import Any, List, Tuple, Dict
+from typing import Any, Dict, List, Tuple
 
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
@@ -40,7 +40,9 @@ class WeatherRepository:
             await session.flush()
 
             city_id, weather_id = data.get("city_id"), new_weather_data.id
-            city_weather_data_objects.append(CityWeatherData(city_id=city_id, weather_id=weather_id))
+            city_weather_data_objects.append(
+                CityWeatherData(city_id=city_id, weather_id=weather_id)
+            )
 
         session.add_all(city_weather_data_objects)
         await cls._secure_commit(session)
