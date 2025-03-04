@@ -1,9 +1,11 @@
+import asyncio
 from contextlib import asynccontextmanager
 
 import uvicorn
 from fastapi import FastAPI
 
 from src.database.service import create_tables, delete_tables
+from src.parser.scheduler import start_scheduler
 from src.routers.city_router import router as city_router
 from src.routers.weather_router import router as weather_router
 
@@ -14,6 +16,8 @@ async def lifespan(fast_api: FastAPI):
     print("База очищена")
     await create_tables()
     print("База готова к работе")
+
+    await asyncio.create_task(start_scheduler())
     yield
     print("Выключение")
 

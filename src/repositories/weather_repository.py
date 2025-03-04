@@ -1,17 +1,16 @@
 import asyncio
-from typing import Any, List, Tuple
+from typing import Any, List, Tuple, Dict
 
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.handlers.custom_exceptions import IntegrityViolationException, RowNotFoundException
+from src.handlers.custom_exceptions import IntegrityViolationException
 from src.models.city_model import City
 from src.models.city_weather_data_model import CityWeatherData
 from src.models.weather_model import WeatherData
 from src.parser.funcs import get_weather
 from src.repositories.city_repository import CityRepository
-from src.schemas.base_schemas import SuccessResponse
 
 
 class WeatherRepository:
@@ -25,14 +24,14 @@ class WeatherRepository:
         return result
 
     @classmethod
-    async def add_weather_data(cls, session: AsyncSession) -> SuccessResponse:
+    async def add_weather_data(cls, session: AsyncSession) -> bool | None:
         """
         Получает данные о погоде для всех городов и добавляет их в базу данных.
         """
         weather_data = await cls._fetch_weather_for_cities(session)
 
         if not weather_data:
-            raise RowNotFoundException("Не удалось получить данные о погоде для городов.")
+            return
 
         city_weather_data_objects = []
         for data in weather_data:
@@ -46,12 +45,12 @@ class WeatherRepository:
         session.add_all(city_weather_data_objects)
         await cls._secure_commit(session)
 
-        return SuccessResponse(message="Данные о погоде успешно добавлены!")
+        return True
 
     @classmethod
     async def _fetch_weather_for_cities(
             cls, session: AsyncSession
-    ) -> Tuple[Any] | None:
+    ) -> Tuple[Dict[str, Any]] | None:
         """
         Получает данные о погоде для всех городов из базы данных.
         """

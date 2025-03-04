@@ -11,12 +11,15 @@ DB_URL = db_settings.db_url(driver="asyncpg")
 engine = create_async_engine(DB_URL, echo=False)
 
 # Фабрика сессий
-async_session = async_sessionmaker(bind=engine, expire_on_commit=False)
+# async_session = async_sessionmaker(bind=engine, expire_on_commit=False)
+API_SessionFactory = async_sessionmaker(bind=engine, expire_on_commit=False, class_=AsyncSession)
+
+Scheduler_SessionFactory = async_sessionmaker(bind=engine, expire_on_commit=False, class_=AsyncSession)
 
 
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
     """Асинхронный генератор сессии БД."""
-    async with async_session() as session:
+    async with API_SessionFactory() as session:
         yield session
 
 

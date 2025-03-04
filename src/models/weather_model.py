@@ -10,7 +10,7 @@ class WeatherData(Base):
     __tablename__ = "weather_data"
 
     timestamp: Mapped[datetime] = mapped_column(
-        DateTime, server_default=func.now(), default=datetime.now()
+        DateTime, server_default=func.now(), default=datetime.now
     )
     temperature: Mapped[float] = mapped_column(Float, nullable=False)
     wind_speed: Mapped[float] = mapped_column(Float, nullable=False)
