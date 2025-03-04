@@ -2,9 +2,9 @@ from typing import Annotated
 
 from fastapi import APIRouter, Path
 
+from src.database.service import DBSession
 from src.repositories.city_repository import CityRepository
 from src.schemas.city_schemas import CitySchema
-from src.database.service import DBSession
 
 router = APIRouter(
     prefix="/api/city",

@@ -4,13 +4,14 @@ from typing import Any, Dict, Union
 import aiohttp
 from geopy.geocoders import Nominatim
 
+from src.models.city_model import City
 from src.parser.config import parser_settings
 
 geolocator = Nominatim(user_agent="weather_parser")
 
 
-async def get_weather(city_title: str) -> Union[Dict[str, Any], None]:
-    location = geolocator.geocode(city_title)
+async def get_weather(city: "City") -> Union[Dict[str, Any], None]:
+    location = geolocator.geocode(city.title)
 
     if not location:
         return None
@@ -29,9 +30,12 @@ async def get_weather(city_title: str) -> Union[Dict[str, Any], None]:
                 data_dict = json.loads(result)
 
                 weather_dict = {
-                    "temperature": data_dict.get("main").get("temp"),
-                    "wind_speed": data_dict.get("wind").get("speed"),
-                    "description": data_dict.get("weather")[0].get("description"),
+                    "city_id": city.id,
+                    "weather": {
+                        "temperature": data_dict.get("main").get("temp"),
+                        "wind_speed": data_dict.get("wind").get("speed"),
+                        "description": data_dict.get("weather")[0].get("description"),
+                    },
                 }
                 return weather_dict
 
