@@ -11,8 +11,6 @@ class DBSettings(BaseSettings):
     Настройки загружаются из переменных окружения или файла `.env`.
     """
 
-    MODE: str
-
     DB_HOST: str  # Хост базы данных
     DB_PORT: int  # Порт базы данных
     DB_USER: str  # Имя пользователя базы данных
