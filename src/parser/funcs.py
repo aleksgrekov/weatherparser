@@ -35,7 +35,7 @@ async def get_weather(city: "City") -> Union[Dict[str, Any], None]:
                         "temperature": data_dict.get("main").get("temp"),
                         "wind_speed": data_dict.get("wind").get("speed"),
                         "description": data_dict.get("weather")[0].get("description"),
-                    },
+                    }
                 }
                 return weather_dict
 

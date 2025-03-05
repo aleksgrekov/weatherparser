@@ -1,3 +1,5 @@
+from typing import Type
+
 from sqlalchemy import delete, exists, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,7 +10,6 @@ from src.handlers.custom_exceptions import (
     RowNotFoundException,
 )
 from src.models.city_model import City
-from src.repositories.city_weather_repository import CityWeatherRepository
 from src.schemas.base_schemas import SuccessResponse
 from src.schemas.city_schemas import CitySchema, ResponseCitySchema
 
@@ -17,7 +18,7 @@ class CityRepository:
 
     @classmethod
     async def add_new_city(
-        cls, session: AsyncSession, city_data: CitySchema
+            cls, session: AsyncSession, city_data: CitySchema
     ) -> ResponseCitySchema:
         city_title = city_data.title
         if await cls._city_exists(session, city_title):
@@ -33,7 +34,6 @@ class CityRepository:
         deleted_city = await cls._delete_city_by_id(session, city_id)
         if not deleted_city:
             raise RowNotFoundException()
-        await CityWeatherRepository.delete_weather_data(session, deleted_city)
 
         await cls._secure_commit(session)
         return SuccessResponse(message="Город успешно удален!")
@@ -45,6 +45,12 @@ class CityRepository:
         return request.scalars().all()
 
     @staticmethod
+    async def get_city_by_id(session: AsyncSession, city_id: int) -> Type[City]:
+        city = await session.get(City, city_id)
+        if city is not None:
+            return city
+
+    @staticmethod
     async def _city_exists(session: AsyncSession, city_title: str) -> bool:
         """
         Проверка существования города по названию.
@@ -53,13 +59,13 @@ class CityRepository:
         return await session.scalar(exists_query)
 
     @staticmethod
-    async def _delete_city_by_id(session: AsyncSession, city_id: int) -> int | None:
+    async def _delete_city_by_id(session: AsyncSession, city_id: int) -> bool:
         """
         Удаление города по ID с возвращением ID удаленной записи.
         """
         delete_query = delete(City).where(City.id == city_id).returning(City.id)
         result = await session.execute(delete_query)
-        return result.fetchone()[0]
+        return result.fetchone() is not None
 
     @staticmethod
     async def _secure_commit(session: AsyncSession) -> None:
