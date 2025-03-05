@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 
 from src.database.service import DBSession
 from src.repositories.weather_repository import WeatherRepository
@@ -18,10 +18,19 @@ router = APIRouter(
     response_model=ResponseWeatherWithPaginationSchema,
     summary="Получить данные о погоде",
     description="Возвращает данные о погоде с возможностью фильтрации по городу, диапазону времени и пагинации.",
+    responses={
+        status.HTTP_200_OK: {
+            "description": "Город успешно удален!",
+            "model": ResponseWeatherWithPaginationSchema,
+        },
+        status.HTTP_422_UNPROCESSABLE_ENTITY: {
+            "description": "Ошибка валидации данных"
+        },
+    },
 )
 async def get_weather(
-    session: DBSession,
-    query_params: QueryWeatherSchema = Depends(),
+        session: DBSession,
+        query_params: QueryWeatherSchema = Depends(),
 ) -> ResponseWeatherWithPaginationSchema:
     """
     Получает данные о погоде с учетом фильтров.

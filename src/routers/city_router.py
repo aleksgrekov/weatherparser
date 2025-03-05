@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Path
+from fastapi import APIRouter, Path, status
 
 from src.database.service import DBSession
 from src.repositories.city_repository import CityRepository
@@ -18,6 +18,18 @@ router = APIRouter(
     response_model=ResponseCitySchema,
     summary="Добавить город",
     description="Создает новый город и сохраняет его в базе данных.",
+    responses={
+        status.HTTP_201_CREATED: {
+            "description": "Город успешно добавлен",
+            "model": ResponseCitySchema,
+        },
+        status.HTTP_409_CONFLICT: {
+            "description": "Запись с такими данными уже существует!",
+        },
+        status.HTTP_422_UNPROCESSABLE_ENTITY: {
+            "description": "Ошибка валидации данных"
+        },
+    },
 )
 async def add_city(session: DBSession, city_data: CitySchema) -> ResponseCitySchema:
     """
@@ -34,9 +46,21 @@ async def add_city(session: DBSession, city_data: CitySchema) -> ResponseCitySch
     response_model=SuccessResponse,
     summary="Удалить город",
     description="Удаляет город по ID и все связанные с ним данные о погоде.",
+    responses={
+        status.HTTP_200_OK: {
+            "description": "Город успешно удален!",
+            "model": SuccessResponse,
+        },
+        status.HTTP_404_NOT_FOUND: {
+            "description": "Запись с такими данными не существует!",
+        },
+        status.HTTP_422_UNPROCESSABLE_ENTITY: {
+            "description": "Ошибка валидации данных"
+        },
+    },
 )
 async def delete_city(
-    session: DBSession, city_id: Annotated[int, Path(ge=1)]
+        session: DBSession, city_id: Annotated[int, Path(ge=1)]
 ) -> SuccessResponse:
     """
     Удаляет город из базы данных по ID.
