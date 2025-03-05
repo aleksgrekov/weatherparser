@@ -6,7 +6,7 @@ from fastapi import FastAPI
 
 from src.database.service import create_tables, delete_tables
 from src.parser.scheduler import start_scheduler
-from src.routers.base import router as base_router
+from src.routers.base_router import router as base_router
 
 
 @asynccontextmanager

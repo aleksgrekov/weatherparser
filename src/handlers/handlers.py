@@ -21,19 +21,22 @@ async def exception_handler(request: Request, exc: Exception) -> JSONResponse:
     Возвращает:
     - JSONResponse: Ответ с типом ошибки, сообщением и кодом состояния 500.
     """
-    error_type = exc.__class__.__name__
-    error_message = str(exc)
-    error_details = traceback.format_exc()
+    error_type: str = exc.__class__.__name__
+    error_message: str = str(exc)
+    error_details: str = traceback.format_exc()
 
+    # Логируем исключение с подробностями
     logger.exception(
-        "Ошибка! Тип: %s, Сообщение: %s\nДетали: %s",
+        "Произошла ошибка! Тип ошибки: %s, Сообщение: %s, Детали: %s\n\n",
         error_type,
         error_message,
         error_details,
     )
 
+    # Формируем ответ с информацией об ошибке
     error_response = ErrorResponseSchema(
-        type=error_type, message=error_message
+        type=error_type,
+        message=error_message,
     ).model_dump()
 
     return JSONResponse(

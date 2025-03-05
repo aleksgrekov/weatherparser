@@ -1,21 +1,34 @@
 from datetime import datetime
-from typing import Optional, List
+from typing import List, Optional
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class QueryWeatherSchema(BaseModel):
+    """
+    Схема для запроса данных о погоде.
+    Позволяет фильтровать данные о погоде по городу, времени и пагинации.
+    """
+
     city_title: Optional[str] = Field(
         None,
         min_length=3,
         max_length=50,
         title="Название города",
+        description="Название города, для которого необходимо получить данные о погоде. "
+                    "Должно быть длиной от 3 до 50 символов.",
     )
     start_time: Optional[datetime] = Field(
-        None, title="Записи о погоде не ранее заданного времени"
+        None,
+        title="Записи о погоде не ранее заданного времени",
+        description="Фильтрация по времени начала записи погоды. "
+                    "Если указано, возвращаются записи о погоде, начиная с этого времени.",
     )
     end_time: Optional[datetime] = Field(
-        None, title="Записи о погоде не позднее заданного времени"
+        None,
+        title="Записи о погоде не позднее заданного времени",
+        description="Фильтрация по времени окончания записи погоды. "
+                    "Если указано, возвращаются записи о погоде, заканчивающиеся до этого времени.",
     )
     page: Optional[int] = Field(
         default=1,
@@ -32,21 +45,34 @@ class QueryWeatherSchema(BaseModel):
 
 
 class ResponseWeatherSchema(BaseModel):
+    """
+    Схема для представления записи о погоде.
+    Включает данные о температуре, скорости ветра, описании погоды и времени записи.
+    """
+
     temperature: float = Field(
         ...,
+        title="Температура",
+        description="Температура воздуха, измеренная в градусах Цельсия.",
     )
     wind_speed: float = Field(
-        ...,
+        ..., title="Скорость ветра", description="Скорость ветра в метрах в секунду."
     )
     description: str = Field(
         ...,
         max_length=50,
+        title="Описание погоды",
+        description="Краткое описание погодных условий, например, 'clear sky', 'overcast clouds'.",
     )
     timestamp: datetime = Field(
         ...,
+        title="Время записи",
+        description="Время, когда была сделана запись о погоде.",
     )
     city_id: int = Field(
         ...,
+        title="ID города",
+        description="Уникальный идентификатор города, к которому относится запись о погоде.",
     )
     city_title: str = Field(
         ...,
@@ -60,12 +86,13 @@ class ResponseWeatherSchema(BaseModel):
 class ResponseWeatherWithPaginationSchema(BaseModel):
     """
     Схема для ответа с пагинированным списком записей о погоде.
+    Включает информацию о пагинации, а также список записей о погоде.
     """
 
     total: int = Field(
         ...,
         title="Общее количество записей",
-        description="Общее количество записей.",
+        description="Общее количество записей о погоде, соответствующих запросу.",
     )
     page: int = Field(
         ...,
@@ -80,6 +107,5 @@ class ResponseWeatherWithPaginationSchema(BaseModel):
     weather_data: List[ResponseWeatherSchema] = Field(
         ...,
         title="Список записей",
-        description="Список записей на текущей странице.",
+        description="Список записей о погоде на текущей странице.",
     )
-
