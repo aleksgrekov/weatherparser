@@ -1,10 +1,13 @@
 from typing import List
 
-from sqlalchemy import select, delete
+from sqlalchemy import delete, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.handlers.custom_exceptions import RowNotFoundException, IntegrityViolationException
+from src.handlers.custom_exceptions import (
+    IntegrityViolationException,
+    RowNotFoundException,
+)
 from src.models.city_weather_data_model import CityWeatherData
 from src.models.weather_model import WeatherData
 
@@ -22,14 +25,22 @@ class CityWeatherRepository:
         await cls._secure_commit(session)
 
     @staticmethod
-    async def _delete_weather_data_by_id(session: AsyncSession, weather_ids: List[int]) -> bool:
-        delete_query = delete(WeatherData).where(WeatherData.id.in_(weather_ids)).returning(WeatherData.id)
+    async def _delete_weather_data_by_id(
+        session: AsyncSession, weather_ids: List[int]
+    ) -> bool:
+        delete_query = (
+            delete(WeatherData)
+            .where(WeatherData.id.in_(weather_ids))
+            .returning(WeatherData.id)
+        )
         result = await session.execute(delete_query)
         return result.fetchone() is not None
 
     @staticmethod
     async def _get_weather_ids(session: AsyncSession, city_id: int) -> List[int]:
-        query = select(CityWeatherData.weather_id).where(CityWeatherData.city_id == city_id)
+        query = select(CityWeatherData.weather_id).where(
+            CityWeatherData.city_id == city_id
+        )
         request = await session.execute(query)
         return list(request.scalars().all())
 

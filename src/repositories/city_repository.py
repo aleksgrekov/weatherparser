@@ -17,7 +17,7 @@ class CityRepository:
 
     @classmethod
     async def add_new_city(
-            cls, session: AsyncSession, city_data: CitySchema
+        cls, session: AsyncSession, city_data: CitySchema
     ) -> ResponseCitySchema:
         city_title = city_data.title
         if await cls._city_exists(session, city_title):

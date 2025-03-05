@@ -51,7 +51,7 @@ class WeatherRepository:
 
     @classmethod
     async def _fetch_weather_for_cities(
-            cls, session: AsyncSession
+        cls, session: AsyncSession
     ) -> Tuple[Dict[str, Any]] | None:
         """
         Получает данные о погоде для всех городов из базы данных.
