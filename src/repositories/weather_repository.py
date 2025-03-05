@@ -1,5 +1,5 @@
 import asyncio
-from typing import Any, Dict, List, Optional, Sequence, Tuple
+from typing import Any, Dict, List, Optional, Sequence
 
 from sqlalchemy import asc, func, select
 from sqlalchemy.exc import IntegrityError
@@ -82,14 +82,12 @@ class WeatherRepository:
             return None
 
         # Получаем данные о погоде для каждого города
-        weather_data: Tuple[Dict[str, Any]] = await asyncio.gather(
-            *(get_weather(city) for city in cities)
-        )
+        weather_data = await asyncio.gather(*(get_weather(city) for city in cities))
         if not weather_data:
             return None
 
         # Создаем объекты Weather для каждого города и данных о погоде
-        weather_objects = [Weather(**data) for data in weather_data]
+        weather_objects = [Weather(**data) for data in weather_data if data is not None]
 
         # Добавляем их в сессию
         session.add_all(weather_objects)

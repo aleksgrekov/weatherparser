@@ -29,8 +29,8 @@ router = APIRouter(
     },
 )
 async def get_weather(
-        session: DBSession,
-        query_params: QueryWeatherSchema = Depends(),
+    session: DBSession,
+    query_params: QueryWeatherSchema = Depends(),
 ) -> ResponseWeatherWithPaginationSchema:
     """
     Получает данные о погоде с учетом фильтров.

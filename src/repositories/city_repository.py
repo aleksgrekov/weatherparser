@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from sqlalchemy import delete, exists, select
 from sqlalchemy.exc import IntegrityError
@@ -77,7 +77,7 @@ class CityRepository:
         return list(request.scalars().all())
 
     @staticmethod
-    async def _city_exists(session: AsyncSession, city_title: str) -> bool:
+    async def _city_exists(session: AsyncSession, city_title: str) -> Optional[bool]:
         """
         Проверяет, существует ли город с указанным названием.
 

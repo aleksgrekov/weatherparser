@@ -1,6 +1,6 @@
-from fastapi import Request
 from datetime import datetime
 
+from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from src.logger.logger import get_logger
@@ -30,7 +30,8 @@ class RequestLoggerMiddleware(BaseHTTPMiddleware):
         elapsed_time = (end_time - start_time).total_seconds()
 
         logger.info(
-            f"Запрос: {method} {url} - Ответ код {response.status_code} - Время выполнения: {elapsed_time:.4f} сек.")
+            f"Запрос: {method} {url} - Ответ код {response.status_code} - Время выполнения: {elapsed_time:.4f} сек."
+        )
 
         return response
 

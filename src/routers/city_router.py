@@ -60,7 +60,7 @@ async def add_city(session: DBSession, city_data: CitySchema) -> ResponseCitySch
     },
 )
 async def delete_city(
-        session: DBSession, city_id: Annotated[int, Path(ge=1)]
+    session: DBSession, city_id: Annotated[int, Path(ge=1)]
 ) -> SuccessResponse:
     """
     Удаляет город из базы данных по ID.

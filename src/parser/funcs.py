@@ -1,5 +1,5 @@
 import json
-from typing import Any, Dict, Union
+from typing import Any, Dict, Optional
 
 import aiohttp
 from geopy.geocoders import Nominatim
@@ -13,7 +13,7 @@ geolocator = Nominatim(user_agent="weather_parser")
 logger = get_logger(__name__)
 
 
-async def get_weather(city: "City") -> Union[Dict[str, Any], None]:
+async def get_weather(city: City) -> Optional[Dict[str, Any]]:
     """
     Асинхронная функция для получения данных о погоде по названию города.
     Использует API для получения информации о погоде, включая температуру, скорость ветра и описание.
@@ -39,7 +39,9 @@ async def get_weather(city: "City") -> Union[Dict[str, Any], None]:
         }
 
         try:
-            async with client.get(url=parser_settings.base_url, params=params) as response:
+            async with client.get(
+                url=parser_settings.base_url, params=params
+            ) as response:
                 if response.status == 200:
                     result = await response.read()
                     data_dict = json.loads(result)
