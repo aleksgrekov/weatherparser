@@ -3,7 +3,10 @@ from apscheduler.triggers.interval import IntervalTrigger
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database.service import Scheduler_SessionFactory
+from src.logger.logger import get_logger
 from src.repositories.weather_repository import WeatherRepository
+
+logger = get_logger(__name__)
 
 
 async def add_weather_data_to_db(session: AsyncSession):
@@ -11,11 +14,11 @@ async def add_weather_data_to_db(session: AsyncSession):
         weather_data = await WeatherRepository.add_weather_data(session)
 
         if weather_data:
-            print("Данные о погоде успешно добавлены!")
+            logger.info("Данные о погоде успешно добавлены!")
         else:
-            print("Не удалось получить данные о погоде.")
+            logger.info("Не удалось получить данные о погоде.")
     except Exception as e:
-        print(f"Ошибка при добавлении данных о погоде: {e}")
+        logger.warning(f"Ошибка при добавлении данных о погоде: {e}")
 
 
 async def start_scheduler():
@@ -24,7 +27,7 @@ async def start_scheduler():
 
         scheduler.add_job(
             add_weather_data_to_db,
-            IntervalTrigger(seconds=5),
+            IntervalTrigger(seconds=10),
             args=[session],
             id="weather_data_task",
             name="Добавление данных о погоде",

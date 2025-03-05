@@ -12,7 +12,7 @@ dict_config = {
     "disable_existing_loggers": False,
     "formatters": {
         "fileFormatter": {
-            "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+            "format": "\n\n%(asctime)s - %(name)s - %(levelname)s - %(message)s",
             "datefmt": "%Y-%m-%dT%H:%M:%S%Z",
         },
         "consoleFormatter": {

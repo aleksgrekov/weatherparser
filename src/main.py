@@ -6,8 +6,7 @@ from fastapi import FastAPI
 
 from src.database.service import create_tables, delete_tables
 from src.parser.scheduler import start_scheduler
-from src.routers.city_router import router as city_router
-from src.routers.weather_router import router as weather_router
+from src.routers.base import router as base_router
 
 
 @asynccontextmanager
@@ -25,8 +24,7 @@ async def lifespan(fast_api: FastAPI):
 # Создание экземпляра FastAPI
 app = FastAPI(title="API Парсинга Погоды", version="1.0.0", lifespan=lifespan)
 
-app.include_router(city_router)
-app.include_router(weather_router)
+app.include_router(base_router)
 
 if __name__ == "__main__":
     uvicorn.run("main:app")

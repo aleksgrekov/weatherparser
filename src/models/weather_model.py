@@ -1,6 +1,7 @@
 from datetime import datetime
 
-from sqlalchemy import String, func
+from sqlalchemy import ForeignKey, String, func
+from sqlalchemy.ext.associationproxy import AssociationProxy, association_proxy
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.models.base_model import Base
@@ -15,11 +16,13 @@ class Weather(Base):
     timestamp: Mapped[datetime] = mapped_column(
         server_default=func.now(), default=datetime.now
     )
+    city_id: Mapped[int] = mapped_column(ForeignKey("cities.id", ondelete="CASCADE"))
 
     cities = relationship(
         "City",
-        secondary="city_weather",
         back_populates="weather",
-        cascade="all, delete",
-        passive_deletes=True,
+    )
+
+    city_title: AssociationProxy[str] = association_proxy(
+        "cities", "title"
     )

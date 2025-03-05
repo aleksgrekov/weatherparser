@@ -1,4 +1,4 @@
-from typing import Type
+from typing import List
 
 from sqlalchemy import delete, exists, select
 from sqlalchemy.exc import IntegrityError
@@ -18,8 +18,16 @@ class CityRepository:
 
     @classmethod
     async def add_new_city(
-            cls, session: AsyncSession, city_data: CitySchema
+        cls, session: AsyncSession, city_data: CitySchema
     ) -> ResponseCitySchema:
+        """
+        Добавляет новый город в базу данных.
+
+        :param session: Асинхронная сессия SQLAlchemy.
+        :param city_data: Данные города для добавления.
+        :return: Схема ответа с данными добавленного города.
+        :raises RowAlreadyExistsException: Если город с таким названием уже существует.
+        """
         city_title = city_data.title
         if await cls._city_exists(session, city_title):
             raise RowAlreadyExistsException()
@@ -31,6 +39,14 @@ class CityRepository:
 
     @classmethod
     async def delete_city(cls, session: AsyncSession, city_id: int) -> SuccessResponse:
+        """
+        Удаляет город по его ID.
+
+        :param session: Асинхронная сессия SQLAlchemy.
+        :param city_id: ID города для удаления.
+        :return: Успешный ответ с сообщением.
+        :raises RowNotFoundException: Если город с указанным ID не найден.
+        """
         deleted_city = await cls._delete_city_by_id(session, city_id)
         if not deleted_city:
             raise RowNotFoundException()
@@ -39,21 +55,25 @@ class CityRepository:
         return SuccessResponse(message="Город успешно удален!")
 
     @staticmethod
-    async def get_cities(session: AsyncSession):
+    async def get_cities(session: AsyncSession) -> List[City]:
+        """
+        Получает список всех городов.
+
+        :param session: Асинхронная сессия SQLAlchemy.
+        :return: Список объектов City.
+        """
         query = select(City)
         request = await session.execute(query)
-        return request.scalars().all()
-
-    @staticmethod
-    async def get_city_by_id(session: AsyncSession, city_id: int) -> Type[City]:
-        city = await session.get(City, city_id)
-        if city is not None:
-            return city
+        return list(request.scalars().all())
 
     @staticmethod
     async def _city_exists(session: AsyncSession, city_title: str) -> bool:
         """
-        Проверка существования города по названию.
+        Проверяет, существует ли город с указанным названием.
+
+        :param session: Асинхронная сессия SQLAlchemy.
+        :param city_title: Название города.
+        :return: True, если город существует, иначе False.
         """
         exists_query = select(exists().where(City.title == city_title))
         return await session.scalar(exists_query)
@@ -61,7 +81,11 @@ class CityRepository:
     @staticmethod
     async def _delete_city_by_id(session: AsyncSession, city_id: int) -> bool:
         """
-        Удаление города по ID с возвращением ID удаленной записи.
+        Удаляет город по его ID.
+
+        :param session: Асинхронная сессия SQLAlchemy.
+        :param city_id: ID города.
+        :return: True, если город был удален, иначе False.
         """
         delete_query = delete(City).where(City.id == city_id).returning(City.id)
         result = await session.execute(delete_query)
@@ -71,6 +95,9 @@ class CityRepository:
     async def _secure_commit(session: AsyncSession) -> None:
         """
         Безопасно выполняет commit в базу данных.
+
+        :param session: Асинхронная сессия SQLAlchemy.
+        :raises IntegrityViolationException: Если возникает ошибка целостности данных.
         """
         try:
             await session.commit()

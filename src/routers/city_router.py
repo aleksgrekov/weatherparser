@@ -7,7 +7,7 @@ from src.repositories.city_repository import CityRepository
 from src.schemas.city_schemas import CitySchema
 
 router = APIRouter(
-    prefix="/api/city",
+    prefix="/cities",
     tags=["CITY"],
 )
 

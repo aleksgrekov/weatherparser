@@ -11,7 +11,6 @@ class City(Base):
 
     weather = relationship(
         "Weather",
-        secondary="city_weather",
         back_populates="cities",
         cascade="all, delete",
         passive_deletes=True,
