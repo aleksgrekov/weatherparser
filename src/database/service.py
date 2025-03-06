@@ -28,6 +28,7 @@ async def get_session() -> AsyncGenerator[AsyncSession, None]:
     """
     async with API_SessionFactory() as session:
         yield session
+        await session.close()
 
 
 # Аннотированный тип для внедрения зависимостей FastAPI

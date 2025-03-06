@@ -39,7 +39,7 @@ async def start_scheduler():
         # Добавление задачи в шедулер, которая будет выполняться с заданным интервалом.
         scheduler.add_job(
             add_weather_data_to_db,  # Функция, которая будет выполняться
-            IntervalTrigger(seconds=10),  # Интервал запуска задачи
+            IntervalTrigger(minutes=1),  # Интервал запуска задачи
             args=[session],  # Передаем сессию как аргумент
             id="weather_data_task",  # Уникальный идентификатор задачи
             name="Задача по добавлению данных о погоде",  # Имя задачи

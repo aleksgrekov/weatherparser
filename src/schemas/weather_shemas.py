@@ -1,7 +1,9 @@
 from datetime import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
+
+from src.handlers.custom_exceptions import WrongDataException
 
 
 class QueryWeatherSchema(BaseModel):
@@ -14,9 +16,10 @@ class QueryWeatherSchema(BaseModel):
         None,
         min_length=3,
         max_length=50,
+        pattern=r"^[A-Za-zА-Яа-яЁё\s-]+$",
         title="Название города",
         description="Название города, для которого необходимо получить данные о погоде. "
-        "Должно быть длиной от 3 до 50 символов.",
+        "Должно быть длиной от 3 до 50 символов, состоять из букв, разрешены пробелы и дефисы",
     )
     start_time: Optional[datetime] = Field(
         None,
@@ -43,6 +46,14 @@ class QueryWeatherSchema(BaseModel):
         description="Количество записей на одной странице. Значение должно быть больше или равно 1.",
     )
 
+    @model_validator(mode="after")
+    def check_time_order(self) -> "QueryWeatherSchema":
+        start_time, end_time = self.start_time, self.end_time
+        if start_time and end_time and start_time > end_time:
+            raise WrongDataException("Поле start_time не может быть больше end_time!")
+
+        return self
+
 
 class ResponseWeatherSchema(BaseModel):
     """
@@ -62,7 +73,7 @@ class ResponseWeatherSchema(BaseModel):
         ...,
         max_length=50,
         title="Описание погоды",
-        description="Краткое описание погодных условий, например, 'clear sky', 'overcast clouds'.",
+        description="Краткое описание погодных условий, например, 'пасмурно', 'переменная облачность'.",
     )
     timestamp: datetime = Field(
         ...,

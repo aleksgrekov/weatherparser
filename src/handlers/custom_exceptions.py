@@ -44,6 +44,15 @@ class RowNotFoundException(BaseCustomException):
     default_message = "Запись с такими данными не существует!"
 
 
+class WrongDataException(BaseCustomException):
+    """
+    Исключение, возникающее, если в запрос введены некорректные данные.
+    """
+
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_message = "Что-то пошло не так!"
+
+
 class IntegrityViolationException(Exception):
     """
     Исключение, возникающее при нарушении целостности данных.
