@@ -12,4 +12,5 @@ def check_time_order(start_time, end_time) -> None:
 
 # Валидатор для преобразования строки city_title в заглавные буквы
 def transform_city_title(cls, value: str) -> str:
-    return value.title()
+    if value is not None:
+        return value.title()
