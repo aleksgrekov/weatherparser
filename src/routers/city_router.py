@@ -16,6 +16,7 @@ router = APIRouter(
 @router.post(
     "/",
     response_model=ResponseCitySchema,
+    status_code=status.HTTP_201_CREATED,
     summary="Добавить город",
     description="Создает новый город и сохраняет его в базе данных.",
     responses={
@@ -44,6 +45,7 @@ async def add_city(session: DBSession, city_data: CitySchema) -> ResponseCitySch
 @router.delete(
     "/{city_id}",
     response_model=SuccessResponse,
+    status_code=status.HTTP_200_OK,
     summary="Удалить город",
     description="Удаляет город по ID и все связанные с ним данные о погоде.",
     responses={

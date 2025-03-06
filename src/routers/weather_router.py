@@ -16,6 +16,7 @@ router = APIRouter(
 @router.get(
     "/",
     response_model=ResponseWeatherWithPaginationSchema,
+    status_code=status.HTTP_200_OK,
     summary="Получить данные о погоде",
     description="Возвращает данные о погоде с возможностью фильтрации по городу, диапазону времени и пагинации.",
     responses={
