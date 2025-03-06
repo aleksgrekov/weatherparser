@@ -20,7 +20,7 @@ router = APIRouter(
     description="Возвращает данные о погоде с возможностью фильтрации по городу, диапазону времени и пагинации.",
     responses={
         status.HTTP_200_OK: {
-            "description": "Город успешно удален!",
+            "description": "Данные о погоде получены!",
             "model": ResponseWeatherWithPaginationSchema,
         },
         status.HTTP_422_UNPROCESSABLE_ENTITY: {
