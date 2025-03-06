@@ -48,9 +48,11 @@ class QueryWeatherSchema(BaseModel):
 
     @model_validator(mode="after")
     def check_time_order(self) -> "QueryWeatherSchema":
+        """Валидатор для проверки порядка времени (start_time <= end_time)"""
         check_time_order(self.start_time, self.end_time)
         return self
 
+    # Валидатор для преобразования строки city_title в заглавные буквы
     validation_field = field_validator("city_title", mode="before")(
         transform_city_title
     )

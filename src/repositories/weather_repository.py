@@ -77,12 +77,16 @@ class WeatherRepository:
         :param session: Асинхронная сессия SQLAlchemy.
         :return: True, если данные добавлены, иначе None.
         """
+        semaphore = asyncio.Semaphore(10)  # Ограничиваем до 10 одновременных запросов
+
         cities: List[City] = await CityRepository.get_cities(session)
         if not cities:
             return None
 
         # Получаем данные о погоде для каждого города
-        weather_data = await asyncio.gather(*(get_weather(city) for city in cities))
+        weather_data = await asyncio.gather(
+            *(cls._get_weather_with_limit(city, semaphore) for city in cities)
+        )
         if not weather_data:
             return None
 
@@ -134,6 +138,11 @@ class WeatherRepository:
         """
         count_query = select(func.count()).select_from(Weather).where(*conditions)
         return (await session.execute(count_query)).scalar() or 0
+
+    @classmethod
+    async def _get_weather_with_limit(cls, city: City, semaphore: asyncio.Semaphore):
+        async with semaphore:  # Ограничиваем число одновременных запросов
+            return await get_weather(city)
 
     @classmethod
     async def _secure_commit(cls, session: AsyncSession) -> None:

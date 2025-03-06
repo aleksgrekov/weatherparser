@@ -6,7 +6,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class DBSettings(BaseSettings):
     """
-    Класс для управления настройками подключения к базе данных PostgreSQL.
+    Класс для управления настройками подключения к базе данных Postgres.
 
     Настройки загружаются из переменных окружения или файла `.env`.
     """
@@ -19,7 +19,7 @@ class DBSettings(BaseSettings):
 
     def db_url(self, driver: Optional[str] = None) -> str:
         """
-        Формирует URL для подключения к базе данных PostgreSQL.
+        Формирует URL для подключения к базе данных Postgres.
 
         :param driver: Опциональный драйвер подключения (например, 'asyncpg').
         :return: Строка с URL подключения к базе данных.

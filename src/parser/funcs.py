@@ -64,5 +64,5 @@ async def get_weather(city: City) -> Optional[Dict[str, Any]]:
                     # В случае ошибки с API
                     return None
         except aiohttp.ClientError as e:
-            logger.warning("fОшибка при запросе данных о погоде: {e}")
+            logger.warning(f"Ошибка при запросе данных о погоде: {e}")
             return None

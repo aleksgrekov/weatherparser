@@ -18,7 +18,7 @@ class CitySchema(BaseModel):
         description="Название города. Должно быть длиной от 3 до 50 символов, "
         "состоять из букв, разрешены пробелы и дефисы",
     )
-
+    # Валидатор для преобразования строки title в заглавные буквы
     validation_field = field_validator("title", mode="before")(transform_city_title)
 
 

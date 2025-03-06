@@ -19,7 +19,8 @@ class BaseCustomException(HTTPException):
         """
         Инициализация исключения с параметром сообщения.
 
-        :param message: Сообщение, которое будет передано в исключение. Если не указано, используется сообщение по умолчанию.
+        :param message: Сообщение, которое будет передано в исключение.
+        Если не указано, используется сообщение по умолчанию.
         """
         detail = message or self.default_message
         super().__init__(status_code=self.status_code, detail=detail)
