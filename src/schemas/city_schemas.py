@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class CitySchema(BaseModel):
@@ -16,6 +16,11 @@ class CitySchema(BaseModel):
         description="Название города. Должно быть длиной от 3 до 50 символов, "
         "состоять из букв, разрешены пробелы и дефисы",
     )
+
+    @field_validator("title", mode="before")
+    @classmethod
+    def transform(cls, value: str) -> str:
+        return value.title()
 
 
 class ResponseCitySchema(CitySchema):
