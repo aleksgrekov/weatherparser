@@ -1,9 +1,9 @@
 from datetime import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
-from src.handlers.custom_exceptions import WrongDataException
+from src.schemas.validators import check_time_order, transform_city_title
 
 
 class QueryWeatherSchema(BaseModel):
@@ -48,11 +48,12 @@ class QueryWeatherSchema(BaseModel):
 
     @model_validator(mode="after")
     def check_time_order(self) -> "QueryWeatherSchema":
-        start_time, end_time = self.start_time, self.end_time
-        if start_time and end_time and start_time > end_time:
-            raise WrongDataException("Поле start_time не может быть больше end_time!")
-
+        check_time_order(self.start_time, self.end_time)
         return self
+
+    validation_field = field_validator("city_title", mode="before")(
+        transform_city_title
+    )
 
 
 class ResponseWeatherSchema(BaseModel):

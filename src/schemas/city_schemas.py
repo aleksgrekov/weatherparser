@@ -1,5 +1,7 @@
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
+from src.schemas.validators import transform_city_title
+
 
 class CitySchema(BaseModel):
     """
@@ -17,10 +19,7 @@ class CitySchema(BaseModel):
         "состоять из букв, разрешены пробелы и дефисы",
     )
 
-    @field_validator("title", mode="before")
-    @classmethod
-    def transform(cls, value: str) -> str:
-        return value.title()
+    validation_field = field_validator("title", mode="before")(transform_city_title)
 
 
 class ResponseCitySchema(CitySchema):
