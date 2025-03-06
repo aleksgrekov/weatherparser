@@ -30,7 +30,7 @@ async def get_weather(city: City) -> Optional[Dict[str, Any]]:
     if not location:
         return None
 
-    async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(15)) as client:
+    async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(45)) as client:
         params = {
             "lang": "ru",
             "lat": location.latitude,
