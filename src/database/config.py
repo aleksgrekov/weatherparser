@@ -13,9 +13,9 @@ class DBSettings(BaseSettings):
 
     DB_HOST: str  # Хост базы данных
     DB_PORT: int  # Порт базы данных
-    DB_USER: str  # Имя пользователя базы данных
-    DB_PASSWORD: str  # Пароль пользователя базы данных
-    DB_NAME: str  # Название базы данных
+    POSTGRES_USER: str  # Имя пользователя базы данных
+    POSTGRES_PASSWORD: str  # Пароль пользователя базы данных
+    POSTGRES_DB: str  # Название базы данных
 
     def db_url(self, driver: Optional[str] = None) -> str:
         """
@@ -26,11 +26,11 @@ class DBSettings(BaseSettings):
         """
         return "postgresql{driver}://{user}:{password}@{host}:{port}/{name}".format(
             driver=f"+{driver}" if driver else "",
-            user=self.DB_USER,
-            password=self.DB_PASSWORD,
+            user=self.POSTGRES_USER,
+            password=self.POSTGRES_PASSWORD,
             host=self.DB_HOST,
             port=self.DB_PORT,
-            name=self.DB_NAME,
+            name=self.POSTGRES_DB,
         )
 
     model_config = SettingsConfigDict(

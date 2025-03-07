@@ -100,11 +100,7 @@ UI: http://127.0.0.1:8000/docs
 
 2. Убедитесь, что значения из файла .env соответствуют параметрам в docker-compose.yml. Замените переменные окружения
    для PostgreSQL:
-   environment:
    ```dockerfile
-     - POSTGRES_USER=<ваше_значение>
-     - POSTGRES_PASSWORD=<ваше_значение>
-     - POSTGRES_DB=<ваше_значение>
    healthcheck:
      test: [ "CMD-SHELL", "pg_isready -U <ваше_значение> -d <ваше_значение>" ]
    ```
