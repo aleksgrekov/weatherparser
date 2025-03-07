@@ -39,5 +39,5 @@ async def get_weather(
     - **query_params**: Фильтры запроса (город, временной диапазон, лимит, офсет)
     - **session**: Асинхронная сессия базы данных
     """
-    params = query_params.model_dump()
+    params = query_params.model_dump(exclude_none=True)
     return await WeatherRepository.get_weather(session, params)

@@ -122,7 +122,7 @@ class WeatherRepository:
                 else getattr(Weather, key) == value
             )
             for key, value in filters.items()
-            if value is not None and key not in ("page", "limit")
+            if key not in ("page", "limit")
         ]
 
         return filters_list
