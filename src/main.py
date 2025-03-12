@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
+from src.handlers.handlers import exception_handler
 from src.middleware.requests_log_mw import create_request_logger_middleware
 from src.parser.scheduler import start_scheduler
 from src.routers.base_router import router as base_router
@@ -21,3 +22,4 @@ app = FastAPI(title="API Парсинга Погоды", version="1.0.0", lifesp
 # Подключение роутеров
 app.include_router(base_router)
 app.add_middleware(create_request_logger_middleware())
+app.add_exception_handler(Exception, exception_handler)
