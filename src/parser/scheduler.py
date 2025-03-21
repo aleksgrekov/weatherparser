@@ -17,17 +17,12 @@ async def add_weather_data_to_db():
     - session: Асинхронная сессия SQLAlchemy для взаимодействия с базой данных.
     """
     async with Scheduler_SessionFactory() as session:
-        try:
-            weather_data = await WeatherRepository.add_weather_data(session)
+        weather_data = await WeatherRepository.add_weather_data(session)
 
-            if weather_data:
-                logger.info("Данные о погоде успешно добавлены в базу данных!")
-            else:
-                logger.info("Не удалось получить данные о погоде.")
-        except Exception as e:
-            logger.warning(f"Ошибка при добавлении данных о погоде: {e}")
-        finally:
-            await session.close()
+        if weather_data:
+            logger.info("Данные о погоде успешно добавлены в базу данных!")
+        else:
+            logger.info("Не удалось получить данные о погоде.")
 
 
 async def start_scheduler():
